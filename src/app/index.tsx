@@ -4,26 +4,38 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  useColorScheme,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { TeamFlag, TEAMS } from '@/components/team-flags';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { MaxContentWidth, Spacing } from '@/constants/theme';
 
-const TEAMS = [
-  '🇧🇷 Brasil', '🇦🇷 Argentina', '🇫🇷 França', '🇩🇪 Alemanha',
-  '🇪🇸 Espanha', '🇵🇹 Portugal', '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra', '🇮🇹 Itália',
-  '🇳🇱 Holanda', '🇺🇾 Uruguai', '🇧🇪 Bélgica', '🇭🇷 Croácia',
-];
+const C = {
+  bg: '#f9fafb',
+  surface: '#ffffff',
+  border: '#e5e7eb',
+  borderLight: '#f3f4f6',
+  blue: '#2563eb',
+  blueDim: '#eff6ff',
+  blueBorder: '#bfdbfe',
+  text: '#111827',
+  textMuted: '#6b7280',
+  textLight: '#9ca3af',
+  green: '#16a34a',
+  greenBg: '#f0fdf4',
+  greenBorder: '#bbf7d0',
+  navBg: '#ffffff',
+  badgeBg: '#eff6ff',
+  badgeText: '#1d4ed8',
+};
 
 export default function HomeScreen() {
   const [name, setName] = useState('');
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const scheme = useColorScheme();
-  const colors = Colors[scheme ?? 'light'];
+  const [showTeams, setShowTeams] = useState(false);
 
   function handleSubmit() {
     setSubmitted(true);
@@ -34,115 +46,337 @@ export default function HomeScreen() {
   const canSubmit = name.trim().length > 0 && selectedTeam !== null;
 
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
+    <View style={styles.root}>
+      {/* Navbar */}
+      <View style={styles.navbar}>
+        <View style={styles.navLeft}>
+          <ThemedText style={styles.navLogo}>⚽ VotCopa</ThemedText>
+          <View style={styles.navDivider} />
+          <ThemedText style={styles.navLink}>Início</ThemedText>
+        </View>
+      </View>
+
+      <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-          <ThemedText type="subtitle" style={styles.title}>
-            🏆 Votação Copa do Mundo
-          </ThemedText>
 
-          <ThemedText type="smallBold">Seu nome</ThemedText>
-          <TextInput
-            style={[styles.input, { color: colors.text, borderColor: colors.backgroundElement, backgroundColor: colors.backgroundElement }]}
-            placeholder="Digite seu nome"
-            placeholderTextColor={colors.textSecondary}
-            value={name}
-            onChangeText={setName}
-          />
-
-          <ThemedText type="smallBold" style={styles.label}>Escolha seu time</ThemedText>
-          <ThemedView style={styles.teamsGrid}>
-            {TEAMS.map((team) => {
-              const isSelected = selectedTeam === team;
-              return (
-                <TouchableOpacity
-                  key={team}
-                  style={[
-                    styles.teamButton,
-                    { backgroundColor: isSelected ? '#2563eb' : colors.backgroundElement },
-                  ]}
-                  onPress={() => setSelectedTeam(team)}
-                  activeOpacity={0.7}
-                >
-                  <ThemedText
-                    type="small"
-                    style={isSelected && styles.teamTextSelected}
-                  >
-                    {team}
-                  </ThemedText>
-                </TouchableOpacity>
-              );
-            })}
-          </ThemedView>
-
-          <TouchableOpacity
-            style={[styles.submitButton, !canSubmit && styles.submitDisabled]}
-            onPress={handleSubmit}
-            disabled={!canSubmit}
-            activeOpacity={0.8}
-          >
-            <ThemedText type="smallBold" style={styles.submitText}>
-              Enviar Voto
-            </ThemedText>
-          </TouchableOpacity>
-
-          {submitted && (
-            <ThemedView type="backgroundElement" style={styles.successBox}>
-              <ThemedText type="default" style={styles.successText}>
-                ✅ Seu voto foi enviado com sucesso!
+          {/* Page header */}
+          <View style={styles.pageHeader}>
+            <View style={styles.pageHeaderLeft}>
+              <View style={styles.statusBadge}>
+                <View style={styles.statusDot} />
+                <ThemedText style={styles.statusText}>Votação aberta</ThemedText>
+              </View>
+              <ThemedText style={styles.pageTitle}>Copa do Mundo 2026</ThemedText>
+              <ThemedText style={styles.pageSubtitle}>
+                Registre seu voto e torça pelo seu time favorito
               </ThemedText>
-            </ThemedView>
-          )}
+            </View>
+          </View>
+
+          <View style={styles.divider} />
+
+          {/* Stats row */}
+          <View style={styles.statsRow}>
+            {[
+              { label: 'Times', value: `${TEAMS.length}` },
+              { label: 'Grupos', value: '8' },
+              { label: 'Jogos', value: '64' },
+            ].map((s) => (
+              <View key={s.label} style={styles.statCard}>
+                <ThemedText style={styles.statValue}>{s.value}</ThemedText>
+                <ThemedText style={styles.statLabel}>{s.label}</ThemedText>
+              </View>
+            ))}
+          </View>
+
+          {/* Form card */}
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <ThemedText style={styles.cardTitle}>Registrar Voto</ThemedText>
+              <ThemedText style={styles.cardDesc}>
+                Preencha os campos abaixo para votar
+              </ThemedText>
+            </View>
+
+            <View style={styles.cardDivider} />
+
+            {/* Name */}
+            <View style={styles.fieldGroup}>
+              <ThemedText style={styles.label}>Nome completo</ThemedText>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: João Silva"
+                placeholderTextColor={C.textLight}
+                value={name}
+                onChangeText={(t) => { setName(t); setSubmitted(false); }}
+                selectionColor={C.blue}
+              />
+              <ThemedText style={styles.hint}>
+                Seu nome será associado ao voto
+              </ThemedText>
+            </View>
+
+            {/* Teams */}
+            <View style={styles.fieldGroup}>
+              <ThemedText style={styles.label}>Time</ThemedText>
+              <TouchableOpacity
+                style={styles.selectTeamBtn}
+                onPress={() => setShowTeams((v) => !v)}
+                activeOpacity={0.7}
+              >
+                {selectedTeam ? (
+                  <View style={styles.selectTeamBtnInner}>
+                    <TeamFlag team={selectedTeam} size={22} />
+                    <ThemedText style={styles.selectTeamBtnTextSelected}>{selectedTeam}</ThemedText>
+                  </View>
+                ) : (
+                  <ThemedText style={styles.selectTeamBtnText}>Selecionar time</ThemedText>
+                )}
+                <ThemedText style={styles.selectTeamChevron}>{showTeams ? '▲' : '▼'}</ThemedText>
+              </TouchableOpacity>
+              {showTeams && (
+                <View style={styles.grid}>
+                  {TEAMS.map((team) => {
+                    const isSelected = selectedTeam === team;
+                    return (
+                      <TouchableOpacity
+                        key={team}
+                        style={[styles.teamBtn, isSelected && styles.teamBtnSelected]}
+                        onPress={() => { setSelectedTeam(team); setShowTeams(false); setSubmitted(false); }}
+                        activeOpacity={0.7}
+                      >
+                        <TeamFlag team={team} size={22} />
+                        <ThemedText style={[styles.teamBtnText, isSelected && styles.teamBtnTextSelected]}>
+                          {team}
+                        </ThemedText>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              )}
+            </View>
+
+            <View style={styles.cardDivider} />
+
+            {/* Actions */}
+            <View style={styles.actions}>
+              <TouchableOpacity
+                style={styles.clearBtn}
+                onPress={() => { setName(''); setSelectedTeam(null); setSubmitted(false); }}
+                activeOpacity={0.7}
+              >
+                <ThemedText style={styles.clearBtnText}>Limpar</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.submitBtn, !canSubmit && styles.submitBtnDisabled]}
+                onPress={handleSubmit}
+                disabled={!canSubmit}
+                activeOpacity={0.85}
+              >
+                <ThemedText style={[styles.submitText, !canSubmit && styles.submitTextDisabled]}>
+                  Enviar Voto →
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+
+            {submitted && (
+              <View style={styles.successBox}>
+                <ThemedText style={styles.successIcon}>✓</ThemedText>
+                <View>
+                  <ThemedText style={styles.successTitle}>Voto registrado!</ThemedText>
+                  <ThemedText style={styles.successDesc}>
+                    Seu voto foi enviado com sucesso.
+                  </ThemedText>
+                </View>
+              </View>
+            )}
+          </View>
+
+          <ThemedText style={styles.footer}>
+            PDMO · Sistema de Votação · 2026
+          </ThemedText>
         </ScrollView>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-  safeArea: { flex: 1, maxWidth: MaxContentWidth, width: '100%' },
-  scroll: { padding: Spacing.four, gap: Spacing.two, paddingBottom: BottomTabInset + Spacing.four },
-  title: { marginBottom: Spacing.three, textAlign: 'center' },
-  label: { marginTop: Spacing.three },
-  input: {
-    borderWidth: 1,
-    borderRadius: Spacing.two,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two + 2,
-    fontSize: 16,
-    marginTop: Spacing.one,
-  },
-  teamsGrid: {
+  root: { flex: 1, backgroundColor: C.bg },
+
+  navbar: {
+    backgroundColor: C.navBg,
+    borderBottomWidth: 1,
+    borderBottomColor: C.border,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: Spacing.two,
-    marginTop: Spacing.one,
-    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: Spacing.four,
+    paddingVertical: Spacing.two + 2,
   },
-  teamButton: {
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.two,
-    minWidth: '45%',
+  navLeft: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
+  navLogo: { color: C.text, fontSize: 16, fontWeight: '700' },
+  navDivider: { width: 1, height: 16, backgroundColor: C.border },
+  navLink: { color: C.textMuted, fontSize: 14, fontWeight: '500' },
+  navBadge: {
+    backgroundColor: C.badgeBg,
+    borderRadius: 99,
+    paddingHorizontal: Spacing.two,
+    paddingVertical: 3,
+  },
+  navBadgeText: { color: C.badgeText, fontSize: 11, fontWeight: '600' },
+
+  safeArea: { flex: 1, alignItems: 'center' },
+  scroll: {
+    width: '100%',
+    maxWidth: MaxContentWidth,
+    padding: Spacing.four,
+    paddingBottom: Spacing.six,
+    gap: Spacing.four,
+    alignSelf: 'center',
+  },
+
+  pageHeader: { gap: Spacing.two },
+  pageHeaderLeft: { gap: Spacing.one + 2 },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    alignSelf: 'flex-start',
+  },
+  statusDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: C.green },
+  statusText: { color: C.green, fontSize: 12, fontWeight: '600' },
+  pageTitle: { color: C.text, fontSize: 28, fontWeight: '700', lineHeight: 34 },
+  pageSubtitle: { color: C.textMuted, fontSize: 14, lineHeight: 20 },
+
+  divider: { height: 1, backgroundColor: C.border },
+
+  statsRow: { flexDirection: 'row', gap: Spacing.three },
+  statCard: {
     flex: 1,
-    alignItems: 'center',
-  },
-  teamTextSelected: { color: '#ffffff' },
-  submitButton: {
-    backgroundColor: '#2563eb',
-    borderRadius: Spacing.two,
-    paddingVertical: Spacing.three,
-    alignItems: 'center',
-    marginTop: Spacing.four,
-  },
-  submitDisabled: { backgroundColor: '#93c5fd' },
-  submitText: { color: '#ffffff', fontSize: 16 },
-  successBox: {
-    borderRadius: Spacing.two,
+    backgroundColor: C.surface,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 10,
     padding: Spacing.three,
     alignItems: 'center',
+    gap: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  statValue: { color: C.text, fontSize: 22, fontWeight: '700' },
+  statLabel: { color: C.textMuted, fontSize: 12 },
+
+  card: {
+    backgroundColor: C.surface,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  cardHeader: { padding: Spacing.four, gap: 4 },
+  cardTitle: { color: C.text, fontSize: 16, fontWeight: '600' },
+  cardDesc: { color: C.textMuted, fontSize: 13 },
+  cardDivider: { height: 1, backgroundColor: C.borderLight },
+
+  fieldGroup: { padding: Spacing.four, gap: Spacing.two },
+  label: { color: C.text, fontSize: 13, fontWeight: '600' },
+  hint: { color: C.textLight, fontSize: 12 },
+  input: {
+    backgroundColor: C.surface,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 8,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two + 2,
+    color: C.text,
+    fontSize: 14,
+  },
+
+  selectTeamBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: C.surface,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 8,
+    paddingVertical: Spacing.two + 2,
+    paddingHorizontal: Spacing.three,
+  },
+  selectTeamBtnInner: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one + 2 },
+  selectTeamBtnText: { color: C.textLight, fontSize: 14 },
+  selectTeamBtnTextSelected: { color: C.text, fontSize: 14, fontWeight: '500' },
+  selectTeamChevron: { color: C.textMuted, fontSize: 11 },
+
+  grid: { flexDirection: 'column', gap: 2 },
+  teamBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    backgroundColor: C.bg,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 8,
+    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.three,
+  },
+  teamBtnSelected: {
+    backgroundColor: C.blueDim,
+    borderColor: C.blueBorder,
+  },
+  teamBtnText: { color: C.textMuted, fontSize: 13, fontWeight: '500' },
+  teamBtnTextSelected: { color: C.blue, fontWeight: '600' },
+
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: Spacing.two,
+    padding: Spacing.four,
+  },
+  clearBtn: {
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 8,
+    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.three,
+  },
+  clearBtnText: { color: C.textMuted, fontSize: 14, fontWeight: '500' },
+  submitBtn: {
+    backgroundColor: C.blue,
+    borderRadius: 8,
+    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.four,
+  },
+  submitBtnDisabled: { backgroundColor: C.blueDim },
+  submitText: { color: '#fff', fontSize: 14, fontWeight: '600' },
+  submitTextDisabled: { color: C.blueBorder },
+
+  successBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+    backgroundColor: C.greenBg,
+    borderTopWidth: 1,
+    borderTopColor: C.greenBorder,
+    padding: Spacing.four,
+  },
+  successIcon: { fontSize: 20, color: C.green },
+  successTitle: { color: C.green, fontSize: 14, fontWeight: '600' },
+  successDesc: { color: C.green, fontSize: 13, opacity: 0.8 },
+
+  footer: {
+    color: C.textLight,
+    fontSize: 12,
+    textAlign: 'center',
     marginTop: Spacing.two,
   },
-  successText: { textAlign: 'center' },
 });
