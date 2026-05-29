@@ -21,6 +21,15 @@ const FLAGS: Record<string, ReturnType<typeof require>> = {
   México: require('@/assets/images/flags/mexico.png'),
   Austrália: require('@/assets/images/flags/australia.png'),
   Suíça: require('@/assets/images/flags/suiça.png'),
+  Bolívia: require('@/assets/images/flags/bolivia.png'),
+  Canadá: require('@/assets/images/flags/canada.png'),
+  Chile: require('@/assets/images/flags/chile.png'),
+  Colômbia: require('@/assets/images/flags/colombia.png'),
+  'Costa Rica': require('@/assets/images/flags/costa rica.png'),
+  Equador: require('@/assets/images/flags/equador.png'),
+  Paraguai: require('@/assets/images/flags/paraguai.png'),
+  Peru: require('@/assets/images/flags/peru.png'),
+  Venezuela: require('@/assets/images/flags/venezuela.png'),
 };
 
 export const TEAMS = Object.keys(FLAGS);

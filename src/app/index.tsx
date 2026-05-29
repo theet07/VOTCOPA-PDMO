@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Image,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -50,7 +51,8 @@ export default function HomeScreen() {
       {/* Navbar */}
       <View style={styles.navbar}>
         <View style={styles.navLeft}>
-          <ThemedText style={styles.navLogo}>⚽ VotCopa</ThemedText>
+          <Image source={require('@/assets/images/flags/Copa.png')} style={styles.navLogoImg} />
+          <ThemedText style={styles.navLogo}>VotCopa</ThemedText>
           <View style={styles.navDivider} />
           <ThemedText style={styles.navLink}>Início</ThemedText>
         </View>
@@ -216,6 +218,7 @@ const styles = StyleSheet.create({
   },
   navLeft: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
   navLogo: { color: C.text, fontSize: 16, fontWeight: '700' },
+  navLogoImg: { width: 60, height: 60, resizeMode: 'contain' },
   navDivider: { width: 1, height: 16, backgroundColor: C.border },
   navLink: { color: C.textMuted, fontSize: 14, fontWeight: '500' },
   navBadge: {
