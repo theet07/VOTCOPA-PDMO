@@ -66,11 +66,11 @@ export default function HomeScreen() {
             <View style={styles.pageHeaderLeft}>
               <View style={styles.statusBadge}>
                 <View style={styles.statusDot} />
-                <ThemedText style={styles.statusText}>Votação aberta</ThemedText>
+                <ThemedText style={styles.statusText}>Palpites abertos</ThemedText>
               </View>
               <ThemedText style={styles.pageTitle}>Copa do Mundo 2026</ThemedText>
               <ThemedText style={styles.pageSubtitle}>
-                Registre seu voto e torça pelo seu time favorito
+                Registre seu palpite e torça pelo seu time favorito
               </ThemedText>
             </View>
           </View>
@@ -94,9 +94,9 @@ export default function HomeScreen() {
           {/* Form card */}
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <ThemedText style={styles.cardTitle}>Registrar Voto</ThemedText>
+              <ThemedText style={styles.cardTitle}>Registrar Palpite</ThemedText>
               <ThemedText style={styles.cardDesc}>
-                Preencha os campos abaixo para votar
+                Preencha os campos abaixo para dar seu palpite
               </ThemedText>
             </View>
 
@@ -114,7 +114,7 @@ export default function HomeScreen() {
                 selectionColor={C.blue}
               />
               <ThemedText style={styles.hint}>
-                Seu nome será associado ao voto
+                Seu nome será associado ao palpite
               </ThemedText>
             </View>
 
@@ -176,7 +176,7 @@ export default function HomeScreen() {
                 activeOpacity={0.85}
               >
                 <ThemedText style={[styles.submitText, !canSubmit && styles.submitTextDisabled]}>
-                  Enviar Voto →
+                  Enviar Palpite →
                 </ThemedText>
               </TouchableOpacity>
             </View>
@@ -185,9 +185,9 @@ export default function HomeScreen() {
               <View style={styles.successBox}>
                 <ThemedText style={styles.successIcon}>✓</ThemedText>
                 <View>
-                  <ThemedText style={styles.successTitle}>Voto registrado!</ThemedText>
+                  <ThemedText style={styles.successTitle}>Palpite registrado!</ThemedText>
                   <ThemedText style={styles.successDesc}>
-                    Seu voto foi enviado com sucesso.
+                    Seu palpite foi enviado com sucesso.
                   </ThemedText>
                 </View>
               </View>
@@ -195,7 +195,7 @@ export default function HomeScreen() {
           </View>
 
           <ThemedText style={styles.footer}>
-            PDMO · Sistema de Votação · 2026
+            PDMO · Sistema de Palpites · 2026
           </ThemedText>
         </ScrollView>
       </SafeAreaView>
