@@ -81,8 +81,8 @@ export default function HomeScreen() {
           <View style={styles.statsRow}>
             {[
               { label: 'Times', value: `${TEAMS.length}` },
-              { label: 'Grupos', value: '8' },
-              { label: 'Jogos', value: '64' },
+              { label: 'Grupos', value: '12' },
+              { label: 'Jogos', value: '104' },
             ].map((s) => (
               <View key={s.label} style={styles.statCard}>
                 <ThemedText style={styles.statValue}>{s.value}</ThemedText>
