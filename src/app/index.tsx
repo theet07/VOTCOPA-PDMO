@@ -184,7 +184,7 @@ export default function HomeScreen() {
             {submitted && (
               <View style={styles.successBox}>
                 <ThemedText style={styles.successIcon}>✓</ThemedText>
-                <View>
+                <View style={styles.successText}>
                   <ThemedText style={styles.successTitle}>Palpite registrado!</ThemedText>
                   <ThemedText style={styles.successDesc}>
                     O palpite de {submitted.name} é que {submitted.team} vai ser campeã.
@@ -365,16 +365,17 @@ const styles = StyleSheet.create({
 
   successBox: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: Spacing.three,
     backgroundColor: C.greenBg,
     borderTopWidth: 1,
     borderTopColor: C.greenBorder,
     padding: Spacing.four,
   },
-  successIcon: { fontSize: 20, color: C.green },
+  successIcon: { fontSize: 20, color: C.green, lineHeight: 22 },
   successTitle: { color: C.green, fontSize: 14, fontWeight: '600' },
-  successDesc: { color: C.green, fontSize: 13, opacity: 0.8 },
+  successDesc: { color: C.green, fontSize: 13, opacity: 0.8, flexWrap: 'wrap' },
+  successText: { flex: 1, gap: 2 },
 
   footer: {
     color: C.textLight,
