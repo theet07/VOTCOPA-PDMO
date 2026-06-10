@@ -35,11 +35,11 @@ const C = {
 export default function HomeScreen() {
   const [name, setName] = useState('');
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<{ name: string; team: string } | null>(null);
   const [showTeams, setShowTeams] = useState(false);
 
   function handleSubmit() {
-    setSubmitted(true);
+    setSubmitted({ name: name.trim(), team: selectedTeam! });
     setName('');
     setSelectedTeam(null);
   }
@@ -110,7 +110,7 @@ export default function HomeScreen() {
                 placeholder="Ex: João Silva"
                 placeholderTextColor={C.textLight}
                 value={name}
-                onChangeText={(t) => { setName(t); setSubmitted(false); }}
+                onChangeText={(t) => { setName(t); setSubmitted(null); }}
                 selectionColor={C.blue}
               />
               <ThemedText style={styles.hint}>
@@ -144,7 +144,7 @@ export default function HomeScreen() {
                       <TouchableOpacity
                         key={team}
                         style={[styles.teamBtn, isSelected && styles.teamBtnSelected]}
-                        onPress={() => { setSelectedTeam(team); setShowTeams(false); setSubmitted(false); }}
+                        onPress={() => { setSelectedTeam(team); setShowTeams(false); setSubmitted(null); }}
                         activeOpacity={0.7}
                       >
                         <TeamFlag team={team} size={22} />
@@ -164,7 +164,7 @@ export default function HomeScreen() {
             <View style={styles.actions}>
               <TouchableOpacity
                 style={styles.clearBtn}
-                onPress={() => { setName(''); setSelectedTeam(null); setSubmitted(false); }}
+                onPress={() => { setName(''); setSelectedTeam(null); setSubmitted(null); }}
                 activeOpacity={0.7}
               >
                 <ThemedText style={styles.clearBtnText}>Limpar</ThemedText>
@@ -187,7 +187,7 @@ export default function HomeScreen() {
                 <View>
                   <ThemedText style={styles.successTitle}>Palpite registrado!</ThemedText>
                   <ThemedText style={styles.successDesc}>
-                    Seu palpite foi enviado com sucesso.
+                    O palpite de {submitted.name} é que {submitted.team} vai ser campeã.
                   </ThemedText>
                 </View>
               </View>
